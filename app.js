@@ -55,8 +55,7 @@
         isStarted: false,
         isEmbedMode: false,
         gpxFilename: null,
-        positionHistory: [],
-        springBackTimer: null
+        positionHistory: []
     };
 
     // ===========================================
@@ -119,19 +118,15 @@
 
         state.map.on('dragstart', () => {
             if (state.isStarted) {
-                // Pause lock but set timer to spring back
                 setLockMode(false);
                 elements.toggleLock.checked = false;
+            }
+        });
 
-                if (state.springBackTimer) clearTimeout(state.springBackTimer);
-
-                state.springBackTimer = setTimeout(() => {
-                    if (state.isStarted && state.isGpsActive) {
-                        setLockMode(true);
-                        elements.toggleLock.checked = true;
-                        showToast('Locked on position', 'info');
-                    }
-                }, CONFIG.springBackTimeout);
+        state.map.on('dragend zoomend', () => {
+            if (state.isStarted && state.isGpsActive) {
+                setLockMode(true);
+                elements.toggleLock.checked = true;
             }
         });
     }
@@ -211,7 +206,6 @@
         state.isStarted = !state.isStarted;
 
         if (state.isStarted) {
-            elements.btnStart.classList.add('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-stop';
 
             // Activate all
@@ -229,7 +223,6 @@
                 state.map.setView(state.lastPosition, CONFIG.trackingZoom, { animate: true });
             }
         } else {
-            elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
 
             // Deactivate all
@@ -240,11 +233,6 @@
             elements.toggleGps.checked = false;
             elements.toggleLock.checked = false;
             elements.toggleHeading.checked = false;
-
-            if (state.springBackTimer) {
-                clearTimeout(state.springBackTimer);
-                state.springBackTimer = null;
-            }
         }
     }
 
@@ -258,7 +246,6 @@
         // If all features are turned off manually, stop the "Start" state
         if (!elements.toggleGps.checked && !elements.toggleLock.checked && !elements.toggleHeading.checked && state.isStarted) {
             state.isStarted = false;
-            elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
         }
     }

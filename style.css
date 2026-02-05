@@ -204,12 +204,6 @@ body {
     border-color: #000000;
 }
 
-.control-btn.primary-btn.active {
-    background: #FF385C;
-    /* Airbnb-style red for Stop */
-    border-color: #FF385C;
-}
-
 .hidden {
     display: none !important;
 }
