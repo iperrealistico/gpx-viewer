@@ -32,7 +32,9 @@
             lineCap: 'round',
             lineJoin: 'round'
         },
-        toastDuration: 4000
+        toastDuration: 4000,
+        trackingZoom: 16,        // Closer zoom when tracking
+        springBackTimeout: 5000 // Inactivity before returning to user
     };
 
     // ===========================================
@@ -53,7 +55,8 @@
         isStarted: false,
         isEmbedMode: false,
         gpxFilename: null,
-        positionHistory: []
+        positionHistory: [],
+        springBackTimer: null
     };
 
     // ===========================================
@@ -115,10 +118,20 @@
         }).addTo(state.map);
 
         state.map.on('dragstart', () => {
-            if (state.isLocked) {
+            if (state.isStarted) {
+                // Pause lock but set timer to spring back
                 setLockMode(false);
                 elements.toggleLock.checked = false;
-                showToast('Auto-lock paused', 'info');
+
+                if (state.springBackTimer) clearTimeout(state.springBackTimer);
+
+                state.springBackTimer = setTimeout(() => {
+                    if (state.isStarted && state.isGpsActive) {
+                        setLockMode(true);
+                        elements.toggleLock.checked = true;
+                        showToast('Locked on position', 'info');
+                    }
+                }, CONFIG.springBackTimeout);
             }
         });
     }
@@ -210,6 +223,11 @@
             elements.toggleGps.checked = true;
             elements.toggleLock.checked = true;
             elements.toggleHeading.checked = true;
+
+            // Zoom in immediately if we have a position
+            if (state.lastPosition) {
+                state.map.setView(state.lastPosition, CONFIG.trackingZoom, { animate: true });
+            }
         } else {
             elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
@@ -222,6 +240,11 @@
             elements.toggleGps.checked = false;
             elements.toggleLock.checked = false;
             elements.toggleHeading.checked = false;
+
+            if (state.springBackTimer) {
+                clearTimeout(state.springBackTimer);
+                state.springBackTimer = null;
+            }
         }
     }
 
@@ -265,7 +288,10 @@
         if (state.lastPosition && getDistance(latlng, state.lastPosition) < CONFIG.minMovement) return;
         state.lastPosition = latlng;
         updateUserMarker(latlng, pos.coords.accuracy);
-        if (state.isLocked) state.map.setView(latlng, state.map.getZoom(), { animate: true });
+        if (state.isLocked) {
+            const zoom = state.map.getZoom() < CONFIG.trackingZoom ? CONFIG.trackingZoom : state.map.getZoom();
+            state.map.setView(latlng, zoom, { animate: true });
+        }
         if (!state.isCompassEnabled && pos.coords.heading) updateHeading(pos.coords.heading);
         setStatus('±' + Math.round(pos.coords.accuracy) + 'm', 'active');
     }

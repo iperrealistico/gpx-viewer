@@ -414,30 +414,14 @@ input:checked+.slider:before {
    Embed Mode
    =========================================== */
 
-body.embed-mode #control-panel {
-    bottom: 12px;
-    padding: 8px 12px;
-    min-width: 180px;
-    border-radius: 12px;
+body.embed-mode #control-panel,
+body.embed-mode #toast-container {
+    display: none !important;
 }
 
-body.embed-mode .panel-header {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-}
-
-body.embed-mode #track-title {
-    font-size: 12px;
-}
-
-body.embed-mode .control-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-}
-
-body.embed-mode .control-btn i {
-    font-size: 16px;
+body.embed-mode .leaflet-control-zoom,
+body.embed-mode .leaflet-control-attribution {
+    display: none !important;
 }
 
 /* ===========================================
