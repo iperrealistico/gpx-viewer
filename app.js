@@ -199,7 +199,6 @@
 
         if (state.isStarted) {
             elements.btnStart.classList.add('active');
-            elements.btnStart.querySelector('span').textContent = 'Stop';
             elements.btnStart.querySelector('i').className = 'fa-solid fa-stop';
 
             // Activate all
@@ -213,7 +212,6 @@
             elements.toggleHeading.checked = true;
         } else {
             elements.btnStart.classList.remove('active');
-            elements.btnStart.querySelector('span').textContent = 'Start';
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
 
             // Deactivate all
@@ -238,7 +236,6 @@
         if (!elements.toggleGps.checked && !elements.toggleLock.checked && !elements.toggleHeading.checked && state.isStarted) {
             state.isStarted = false;
             elements.btnStart.classList.remove('active');
-            elements.btnStart.querySelector('span').textContent = 'Start';
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
         }
     }
