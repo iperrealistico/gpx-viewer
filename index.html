@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
+    <title>GPX Viewer</title>
+
+    <!-- Vendored Leaflet CSS -->
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+
+    <!-- Vendored Font Awesome -->
+    <link rel="stylesheet" href="vendor/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome/css/solid.min.css">
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Full-screen map container -->
+    <div id="map"></div>
+
+    <!-- Floating Control Panel -->
+    <div id="control-panel">
+        <div class="panel-header">
+            <h1 id="track-title">Loading...</h1>
+            <span id="status-badge" class="status-badge hidden">
+                <i class="fa-solid fa-circle-notch fa-spin"></i>
+                <span id="status-text"></span>
+            </span>
+        </div>
+
+        <div class="panel-controls">
+            <button id="btn-gps" class="control-btn" aria-label="Start GPS tracking">
+                <i class="fa-solid fa-location-crosshairs"></i>
+                <span class="btn-label">GPS</span>
+            </button>
+
+            <button id="btn-lock" class="control-btn" disabled aria-label="Lock camera on position">
+                <i class="fa-solid fa-lock-open"></i>
+                <span class="btn-label">Lock</span>
+            </button>
+
+            <button id="btn-compass" class="control-btn" disabled aria-label="Enable compass heading">
+                <i class="fa-solid fa-compass"></i>
+                <span class="btn-label">Heading</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast container for notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Vendored Leaflet JS -->
+    <script src="vendor/leaflet/leaflet.js"></script>
+
+    <!-- Vendored leaflet-gpx plugin -->
+    <script src="vendor/leaflet-gpx/gpx.js"></script>
+
+    <!-- App script -->
+    <script src="app.js"></script>
+</body>
+
+</html>

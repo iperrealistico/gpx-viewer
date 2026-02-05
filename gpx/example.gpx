@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="GPX Viewer Sample" 
+     xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+  <metadata>
+    <name>Example Trail Loop</name>
+    <desc>A sample GPX track for testing the viewer. This is a loop trail near Sillico, Italy.</desc>
+    <author>
+      <name>GPX Viewer Demo</name>
+    </author>
+  </metadata>
+  <trk>
+    <name>Example Trail Loop</name>
+    <trkseg>
+      <!-- Starting point near Sillico -->
+      <trkpt lat="44.0842" lon="10.5231">
+        <ele>650</ele>
+      </trkpt>
+      <trkpt lat="44.0845" lon="10.5238">
+        <ele>655</ele>
+      </trkpt>
+      <trkpt lat="44.0851" lon="10.5242">
+        <ele>662</ele>
+      </trkpt>
+      <trkpt lat="44.0858" lon="10.5240">
+        <ele>670</ele>
+      </trkpt>
+      <trkpt lat="44.0865" lon="10.5235">
+        <ele>678</ele>
+      </trkpt>
+      <trkpt lat="44.0870" lon="10.5228">
+        <ele>685</ele>
+      </trkpt>
+      <trkpt lat="44.0873" lon="10.5218">
+        <ele>690</ele>
+      </trkpt>
+      <trkpt lat="44.0875" lon="10.5205">
+        <ele>695</ele>
+      </trkpt>
+      <trkpt lat="44.0874" lon="10.5192">
+        <ele>692</ele>
+      </trkpt>
+      <trkpt lat="44.0870" lon="10.5180">
+        <ele>688</ele>
+      </trkpt>
+      <trkpt lat="44.0863" lon="10.5172">
+        <ele>680</ele>
+      </trkpt>
+      <trkpt lat="44.0855" lon="10.5168">
+        <ele>672</ele>
+      </trkpt>
+      <trkpt lat="44.0846" lon="10.5170">
+        <ele>665</ele>
+      </trkpt>
+      <trkpt lat="44.0838" lon="10.5178">
+        <ele>658</ele>
+      </trkpt>
+      <trkpt lat="44.0832" lon="10.5190">
+        <ele>652</ele>
+      </trkpt>
+      <trkpt lat="44.0830" lon="10.5205">
+        <ele>648</ele>
+      </trkpt>
+      <trkpt lat="44.0833" lon="10.5218">
+        <ele>650</ele>
+      </trkpt>
+      <trkpt lat="44.0838" lon="10.5228">
+        <ele>652</ele>
+      </trkpt>
+      <!-- Return to start -->
+      <trkpt lat="44.0842" lon="10.5231">
+        <ele>650</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
