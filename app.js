@@ -54,6 +54,7 @@
         isCompassEnabled: false,
         isStarted: false,
         isEmbedMode: false,
+        embedType: 0, // 0: none, 1: no UI, 2: start button only
         gpxFilename: null,
         positionHistory: [],
         hasInitialZoomed: false
@@ -93,14 +94,27 @@
         initMap();
         loadGpxFromQuery();
         setupEventListeners();
+
+        // Auto-start if requested in URL
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('start') === '1') {
+            setTimeout(toggleUnifiedStart, 500); // Small delay for map to stabilize
+        }
     }
 
     function checkEmbedMode() {
         const params = new URLSearchParams(window.location.search);
-        state.isEmbedMode = params.get('embed') === '1';
-        if (state.isEmbedMode) {
-            document.body.classList.add('embed-mode');
+        const embed = params.get('embed');
+
+        if (embed === '1') {
+            state.isEmbedMode = true;
+            state.embedType = 1;
+            document.body.classList.add('embed-mode', 'embed-1');
             elements.btnOpenFull.classList.remove('hidden');
+        } else if (embed === '2') {
+            state.isEmbedMode = true;
+            state.embedType = 2;
+            document.body.classList.add('embed-mode', 'embed-2');
         }
     }
 
@@ -204,6 +218,15 @@
     // ===========================================
 
     function toggleUnifiedStart() {
+        // If in embed=2, Start button acts as a redirect to full page with auto-start enabled
+        if (state.embedType === 2) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('embed');
+            url.searchParams.set('start', '1');
+            window.open(url.href, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
         state.isStarted = !state.isStarted;
 
         if (state.isStarted) {

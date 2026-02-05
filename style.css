@@ -419,14 +419,38 @@ input:checked+.slider:before {
    Embed Mode
    =========================================== */
 
-body.embed-mode #control-panel,
-body.embed-mode #toast-container {
+body.embed-1 #control-panel,
+body.embed-1 #toast-container {
     display: none !important;
 }
 
 body.embed-mode .leaflet-control-zoom,
 body.embed-mode .leaflet-control-attribution {
     display: none !important;
+}
+
+/* Embed Type 2 - Centered Start Button only */
+body.embed-2 #control-panel {
+    min-width: auto;
+    width: auto;
+    padding: 8px;
+    border-radius: 18px;
+    bottom: 20px;
+}
+
+body.embed-2 .panel-header,
+body.embed-2 #btn-settings {
+    display: none !important;
+}
+
+body.embed-2 .panel-controls {
+    justify-content: center;
+    gap: 0;
+}
+
+body.embed-2 #btn-start {
+    width: 120px;
+    /* Slightly wider for the only button */
 }
 
 /* ===========================================
