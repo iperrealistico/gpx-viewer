@@ -204,6 +204,17 @@ body {
     border-color: #000000;
 }
 
+.control-btn.primary-btn.active {
+    background: #999999;
+    /* Modern muted gray for Stop state */
+    border-color: #999999;
+}
+
+.control-btn.primary-btn.active:hover:not(:disabled) {
+    background: #888888;
+    border-color: #888888;
+}
+
 .hidden {
     display: none !important;
 }

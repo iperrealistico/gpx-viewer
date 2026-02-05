@@ -206,6 +206,7 @@
         state.isStarted = !state.isStarted;
 
         if (state.isStarted) {
+            elements.btnStart.classList.add('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-stop';
 
             // Activate all
@@ -223,6 +224,7 @@
                 state.map.setView(state.lastPosition, CONFIG.trackingZoom, { animate: true });
             }
         } else {
+            elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
 
             // Deactivate all
@@ -246,6 +248,7 @@
         // If all features are turned off manually, stop the "Start" state
         if (!elements.toggleGps.checked && !elements.toggleLock.checked && !elements.toggleHeading.checked && state.isStarted) {
             state.isStarted = false;
+            elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
         }
     }
@@ -292,7 +295,18 @@
 
     function setLockMode(enabled) {
         state.isLocked = enabled;
-        if (enabled && state.lastPosition) state.map.setView(state.lastPosition, state.map.getZoom(), { animate: true });
+        if (enabled && state.lastPosition) {
+            const currentZoom = state.map.getZoom();
+            const targetZoom = currentZoom < CONFIG.trackingZoom ? CONFIG.trackingZoom : currentZoom;
+
+            // If the user's position is way off screen, just jump there without animation
+            const bounds = state.map.getBounds();
+            if (!bounds.contains(state.lastPosition)) {
+                state.map.setView(state.lastPosition, targetZoom, { animate: false });
+            } else {
+                state.map.setView(state.lastPosition, targetZoom, { animate: true });
+            }
+        }
     }
 
     // ===========================================
