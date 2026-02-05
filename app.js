@@ -55,7 +55,8 @@
         isStarted: false,
         isEmbedMode: false,
         gpxFilename: null,
-        positionHistory: []
+        positionHistory: [],
+        hasInitialZoomed: false
     };
 
     // ===========================================
@@ -206,35 +207,29 @@
         state.isStarted = !state.isStarted;
 
         if (state.isStarted) {
+            // UI state first for robustness
             elements.btnStart.classList.add('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-stop';
 
-            // Activate all
-            toggleFeature('gps', true);
-            toggleFeature('lock', true);
-            toggleFeature('heading', true);
-
-            // Sync toggles in UI
             elements.toggleGps.checked = true;
             elements.toggleLock.checked = true;
             elements.toggleHeading.checked = true;
 
-            // Zoom in immediately if we have a position
-            if (state.lastPosition) {
-                state.map.setView(state.lastPosition, CONFIG.trackingZoom, { animate: true });
-            }
+            // Then activate logic
+            toggleFeature('gps', true);
+            toggleFeature('lock', true);
+            toggleFeature('heading', true);
         } else {
             elements.btnStart.classList.remove('active');
             elements.btnStart.querySelector('i').className = 'fa-solid fa-play';
 
-            // Deactivate all
-            toggleFeature('gps', false);
-            toggleFeature('lock', false);
-            toggleFeature('heading', false);
-
             elements.toggleGps.checked = false;
             elements.toggleLock.checked = false;
             elements.toggleHeading.checked = false;
+
+            toggleFeature('gps', false);
+            toggleFeature('lock', false);
+            toggleFeature('heading', false);
         }
     }
 
@@ -266,24 +261,43 @@
 
     function stopGps() {
         if (state.watchId !== null) { navigator.geolocation.clearWatch(state.watchId); state.watchId = null; }
-        if (state.userMarker) { state.map.removeLayer(state.userMarker); state.userMarker = null; }
-        if (state.accuracyCircle) { state.map.removeLayer(state.accuracyCircle); state.accuracyCircle = null; }
+        if (state.userMarker) { state.map.removeLayer(state.userMarker); state.map.removeLayer(state.accuracyCircle); state.userMarker = null; state.accuracyCircle = null; }
         state.isGpsActive = false;
         state.lastPosition = null;
+        state.hasInitialZoomed = false; // Reset for next start
         hideStatus();
     }
 
     function onPositionUpdate(pos) {
         const latlng = [pos.coords.latitude, pos.coords.longitude];
+        const acc = pos.coords.accuracy;
+
         if (state.lastPosition && getDistance(latlng, state.lastPosition) < CONFIG.minMovement) return;
         state.lastPosition = latlng;
-        updateUserMarker(latlng, pos.coords.accuracy);
-        if (state.isLocked) {
-            const zoom = state.map.getZoom() < CONFIG.trackingZoom ? CONFIG.trackingZoom : state.map.getZoom();
-            state.map.setView(latlng, zoom, { animate: true });
+
+        // Show marker only if accuracy is reasonable (< 100m)
+        if (acc < 100) {
+            updateUserMarker(latlng, acc);
         }
+
+        // Stable Lock Logic: Only zoom/follow once accuracy is tight (< 60m)
+        if (state.isLocked && acc < 60) {
+            const currentZoom = state.map.getZoom();
+            // Initial zoom when first stable position found
+            const targetZoom = (!state.hasInitialZoomed || currentZoom < CONFIG.trackingZoom) ? CONFIG.trackingZoom : currentZoom;
+
+            const bounds = state.map.getBounds();
+            if (!bounds.contains(latlng)) {
+                state.map.setView(latlng, targetZoom, { animate: !state.hasInitialZoomed ? false : true });
+            } else {
+                state.map.setView(latlng, targetZoom, { animate: true });
+            }
+
+            state.hasInitialZoomed = true;
+        }
+
         if (!state.isCompassEnabled && pos.coords.heading) updateHeading(pos.coords.heading);
-        setStatus('±' + Math.round(pos.coords.accuracy) + 'm', 'active');
+        setStatus('±' + Math.round(acc) + 'm', 'active');
     }
 
     function onPositionError(err) {
