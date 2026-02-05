@@ -1,23 +1,35 @@
 # GPX Viewer
 
-A minimal, mobile-friendly GPX track viewer designed for GitHub Pages. Load GPX files from a local folder and view them on an interactive map with live GPS tracking and compass support.
+A minimal, mobile-friendly GPX track viewer designed for GitHub Pages. Load GPX files from a local folder and view them on an interactive map with live GPS tracking, follow mode, and compass support.
 
 ## Features
 
-- 📍 **GPX Track Display** - Load and render GPX tracks on an OpenStreetMap base map
-- 🗺️ **Interactive Map** - Pan, zoom, and pinch-to-zoom support (mobile-optimized)
-- 📡 **Live GPS Tracking** - Show your current position with accuracy indicator
-- 🔒 **Lock-on-User Mode** - Keep the map centered on your position as you move
-- 🧭 **Compass Heading** - Display your facing direction (with GPS fallback)
+- 📍 **GPX Track Display** - Load and render GPX tracks via `?gpx=filename.gpx`.
+- 📡 **Unified Tracking** - Single "Start" button to enable GPS, Lock-on-me, and Compass at once.
+- 🔗 **Easy Sharing** - Built-in sharing tools (Web Share API) and clipboard copy.
+- 🧩 **Embed Mode** - Minimal interface for iframes via `?embed=1`.
+- 🧭 **Heading Support** - Visual compass arrow (requires device orientation support).
+- 📱 **Mobile First** - Airbnb-inspired clean design with thumb-friendly controls.
 
-## UI Design
+## Embedding
 
-The interface follows a **minimal, white-first aesthetic** inspired by Airbnb:
-- Clean white floating control panel with subtle shadows
-- Inter font family (via Google Fonts) for modern typography
-- Font Awesome 6 icons (vendored locally)
-- Toast notifications for non-intrusive feedback
-- Mobile-first responsive design with thumb-friendly controls
+You can easily embed the GPX viewer into your own website using an iframe. Use the `embed=1` parameter for a cleaner, compact interface.
+
+### Example Iframe Code
+
+```html
+<iframe 
+  src="https://yourusername.github.io/gpx-viewer/?gpx=example.gpx&embed=1" 
+  width="100%" 
+  height="450" 
+  frameborder="0" 
+  allow="fullscreen; clipboard-write; geolocation"
+  style="border-radius: 12px; border: 1px solid #e8e8e8;"
+></iframe>
+```
+
+> [!NOTE]
+> For GPS and Compass to work inside an iframe, ensure the `allow` attribute includes `geolocation`. Some browsers still restrict motion sensors (Compass) inside cross-origin iframes. In these cases, users can tap the **"Open"** button to view the track in a full browser tab.
 
 ## Quick Start
 
@@ -29,117 +41,50 @@ cd gpx-viewer
 
 # Start a local server (Python 3)
 python3 -m http.server 8000
-
-# Or with Python 2
-python -m SimpleHTTPServer 8000
-
-# Or with Node.js (npx)
-npx serve .
 ```
 
 Then open: **http://localhost:8000/?gpx=example.gpx**
 
-### Deploy to GitHub Pages
+### URL Parameters
 
-1. Push this repository to GitHub
-2. Go to **Settings → Pages**
-3. Select **Source: Deploy from a branch** → **main** (or your default branch)
-4. Your site will be live at: `https://yourusername.github.io/gpx-viewer/?gpx=example.gpx`
-
-## Usage
-
-### Loading a GPX File
-
-Add a `?gpx=` query parameter to the URL:
-
-```
-https://yoursite.com/?gpx=my-track.gpx
-```
-
-The app will fetch the file from the `/gpx/` folder.
-
-### Adding New GPX Files
-
-1. Copy your `.gpx` file to the `/gpx/` folder
-2. Commit and push to GitHub
-3. Access it via `/?gpx=your-file-name.gpx`
-
-**Filename rules:**
-- Only alphanumeric characters, dashes (`-`), and underscores (`_`) are allowed
-- Must end with `.gpx`
-- Examples: `trail-01.gpx`, `my_hike.gpx`, `route2024.gpx`
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `gpx` | `filename.gpx` | The track file located in the `/gpx/` folder. |
+| `embed` | `1` | Enables a minimal interface for embedding. |
 
 ## Controls
 
-| Button | Function |
-|--------|----------|
-| **GPS** | Start/stop location tracking |
-| **Lock** | Toggle auto-centering on your position |
-| **Heading** | Enable compass direction indicator |
+### The "Start" Button
+- Activates **GPS Tracking**, **Auto-Lock** (centering), and **Compass Heading** simultaneously.
+- Tapping **Stop** disables all tracking features together.
 
-### Lock Mode Behavior
-
-- When **Lock** is enabled, the map auto-centers on your position
-- If you manually pan the map, lock is automatically disabled
-- Tap **Lock** again to re-enable
-
-## iOS Compass Permission
-
-On iOS 13+, the compass requires explicit user permission. When you tap the **Heading** button, you'll see a system permission dialog. You must grant permission for heading to work.
-
-If you denied permission:
-1. Go to **Settings → Safari → Settings for This Website**
-2. Enable **Motion & Orientation Access**
-
-**Fallback:** If compass is unavailable, the app uses GPS course heading when you're moving.
+### Settings Panel
+- **Share Track**: Opens the native share dialog or copies the link to your clipboard.
+- **Embed Code**: Copies a ready-to-use HTML iframe snippet for the current track.
+- **Advanced Controls**: Independently toggle GPS, Lock, or Heading for custom behavior.
+- **Open Full Page**: Opens the current track in a new tab without embed mode (useful for iframe users).
 
 ## File Structure
 
 ```
 gpx-viewer/
 ├── index.html              # Main HTML
-├── style.css               # Minimal white-first styles
+├── style.css               # Airbnb-inspired styles
 ├── app.js                  # Application logic
 ├── vendor/
-│   ├── leaflet/            # Leaflet.js 1.9.4 (vendored)
-│   ├── leaflet-gpx/        # GPX plugin 2.1.2 (vendored)
-│   └── fontawesome/        # Font Awesome 6.5.1 (vendored)
-│       ├── css/
-│       └── webfonts/
+│   ├── leaflet/            # Leaflet.js 1.9.4
+│   ├── leaflet-gpx/        # GPX plugin 2.1.2
+│   └── fontawesome/        # Font Awesome 6 icons
 ├── gpx/
-│   └── example.gpx         # Sample GPX track
+│   └── example.gpx         # Your GPX files
 └── README.md
 ```
 
-## External Dependencies
-
-| Dependency | Source | Notes |
-|------------|--------|-------|
-| Inter Font | Google Fonts CDN | Clean modern typography |
-| Leaflet.js | Vendored | Map library |
-| leaflet-gpx | Vendored | GPX rendering plugin |
-| Font Awesome 6 | Vendored | UI icons |
-
-## Browser Support
-
-- ✅ iOS Safari (primary target)
-- ✅ Android Chrome (primary target)
-- ✅ Desktop browsers (secondary)
-
-## Accessibility
-
-- All buttons have `aria-label` attributes
-- Focus states for keyboard navigation
-- Respects `prefers-reduced-motion` setting
-- High contrast text on controls
-
-## Graceful Degradation
-
-The app works even without GPS or compass:
-- Denied location? → Track still displays, you can explore the map
-- No compass support? → Falls back to GPS heading when moving
-- Nothing works? → Toast notification explains the limitation
+## Accessibility & Performance
+- **Aria-labels** on all icon buttons.
+- **Semantic HTML** used throughout.
+- **Minimal dependencies**: Vanilla JS + Leaflet (vendored).
+- **Reduced Motion** support via CSS.
 
 ## License
-
-MIT License - Use freely for personal or commercial projects.
+MIT License. Free for personal and commercial use.

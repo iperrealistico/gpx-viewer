@@ -35,20 +35,81 @@
         </div>
 
         <div class="panel-controls">
-            <button id="btn-gps" class="control-btn" aria-label="Start GPS tracking">
-                <i class="fa-solid fa-location-crosshairs"></i>
-                <span class="btn-label">GPS</span>
+            <!-- Unified Start Button -->
+            <button id="btn-start" class="control-btn primary-btn" aria-label="Start tracking">
+                <i class="fa-solid fa-play"></i>
+                <span class="btn-label">Start</span>
             </button>
 
-            <button id="btn-lock" class="control-btn" disabled aria-label="Lock camera on position">
-                <i class="fa-solid fa-lock-open"></i>
-                <span class="btn-label">Lock</span>
+            <!-- Settings Button -->
+            <button id="btn-settings" class="control-btn" aria-label="Open settings">
+                <i class="fa-solid fa-gear"></i>
+                <span class="btn-label">Settings</span>
             </button>
 
-            <button id="btn-compass" class="control-btn" disabled aria-label="Enable compass heading">
-                <i class="fa-solid fa-compass"></i>
-                <span class="btn-label">Heading</span>
+            <!-- Open Full Page (Embed mode only) -->
+            <button id="btn-open-full" class="control-btn hidden" aria-label="Open in new tab">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span class="btn-label">Open</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Settings Panel (Popover/Modal) -->
+    <div id="settings-overlay" class="hidden">
+        <div id="settings-panel">
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button id="btn-close-settings" class="close-btn" aria-label="Close settings">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="settings-section">
+                <h3>Sharing</h3>
+                <div class="settings-grid">
+                    <button id="btn-share" class="settings-btn">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>Share Track</span>
+                    </button>
+                    <button id="btn-copy-embed" class="settings-btn">
+                        <i class="fa-solid fa-code"></i>
+                        <span>Embed Code</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Advanced Controls</h3>
+                <div class="toggle-row">
+                    <span>GPS Tracking</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-gps">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Lock-on-User</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-lock">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Compass Heading</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-heading">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-footer">
+                <button id="btn-full-page-fallback" class="full-width-btn">
+                    <i class="fa-solid fa-expand"></i>
+                    Open Full Page
+                </button>
+            </div>
         </div>
     </div>
 
